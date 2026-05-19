@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <queue>
+#include <climits>
 using namespace std;
 
 struct Process{
@@ -10,7 +11,8 @@ struct Process{
     int remaining;
     int turnaround_time=0;
     int waiting_time=0;
-}
+    int response_time=-1;
+};
 
 int main(){
     //processes
@@ -59,6 +61,9 @@ int main(){
         q.pop();
         Process& p=processes[front];
 
+        if(p.response_time==-1){
+            p.response_time=time-p.arrival_time;
+        }
         //run for quantum time/ remaining time-whichever is smaller
         int run=min(quantum, p.remaining);
         p.remaining-=run;
@@ -76,9 +81,23 @@ int main(){
             p.waiting_time=p.turnaround_time-p.burst_time;
             completed++;
         }else{
-            ready.push(front); //push back to queue if not done
+            q.push(front); //push back to queue if not done
         }
-        
     }
+    int av_wait=0;
+    int av_resp=0;
+    //printing
+    for(auto& p: processes){
+        cout<<"ID: "<<p.id<<endl;
+        cout<<"W.T: "<<p.waiting_time<<endl;
+        cout<<"T.T: "<<p.turnaround_time<<endl;
+        av_wait+=p.waiting_time;
+        av_resp+=p.response_time;
+    }
+    double wait=(double)av_wait/n;
+    double response=(double)av_resp/n;
+
+    cout<<"Average wait times: "<<wait<<endl;
+    cout<<"Average response times: "<<response<<endl;
     return 0;
 }
