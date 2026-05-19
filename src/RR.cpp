@@ -14,9 +14,9 @@ struct Process{
 
 int main(){
     //processes
-    Process p1={1, 0, 6};
-    Process p2={2, 2, 8};
-    Process p3={3, 4, 3};
+    Process p1={1, 0, 6, 6};
+    Process p2={2, 2, 8, 8};
+    Process p3={3, 4, 3, 3};
     vector<Process> processes={p1, p2, p3};
     //variables
     int n=processes.size();
@@ -53,7 +53,19 @@ int main(){
                     inQueue[i]=true;
                 }
             }
+            continue;
         }
+
+        int front=q.front();
+        q.pop();
+        Process& p=processes[front];
+
+        //run for quantum time/ remaining time-whichever is smaller
+        int run=min(quantum, p.remaining);
+        p.remaining-=run;
+        time+=run;
+        
+        
     }
     return 0;
 }
