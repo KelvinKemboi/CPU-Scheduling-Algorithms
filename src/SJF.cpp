@@ -46,9 +46,9 @@ int main(){
         }
         //update variables
         Process& p=processes[shortest];
-        p.turnaround_time=(time+p.burst_time)-p.arrival_time;
-        p.waiting_time=p.turnaround_time-p.burst_time;
         time+=p.burst_time;
+        p.turnaround_time=time-p.arrival_time;
+        p.waiting_time=p.turnaround_time-p.burst_time;
         done[shortest]=true;
         completed++;
     }

@@ -45,7 +45,6 @@ int main(){
                 }
             }
             time=next_arrival;
-
             //add to queue
             for(int i=0;i<n;i++){
                 if(!inQueue[i] && processes[i].arrival_time<=time){
@@ -55,7 +54,7 @@ int main(){
             }
             continue;
         }
-
+        //get frontmost process
         int front=q.front();
         q.pop();
         Process& p=processes[front];
@@ -64,7 +63,21 @@ int main(){
         int run=min(quantum, p.remaining);
         p.remaining-=run;
         time+=run;
-        
+        //add any new processes to queue
+        for(int i=0;i<n;i++){
+            if(!inQueue[i] && processes[i].arrival_time<=time){
+                q.push(i);
+                inQueue[i]=true;
+            }
+        }
+        //completed check
+        if(p.remaining==0){
+            p.turnaround_time=time-p.arrival_time;
+            p.waiting_time=p.turnaround_time-p.burst_time;
+            completed++;
+        }else{
+            ready.push(front); //push back to queue if not done
+        }
         
     }
     return 0;
