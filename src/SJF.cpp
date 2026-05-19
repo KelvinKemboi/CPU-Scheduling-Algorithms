@@ -44,7 +44,21 @@ int main(){
            time=next_arrival;
            continue;
         }
-        
+        Process& p=processes[shortest];
+        p.turnaround_time=(time+p.burst_time)-p.arrival_time;
+        p.waiting_time=p.turnaround_time-p.burst_time;
+        time+=p.burst_time;
+        done[shortest]=true;
+        completed++;
     }
+    int av_waiting=0;
+    for(auto& p: processes){
+        cout<<"P: "<<p.id<<endl;
+        cout<<"W.T: "<<p.waiting_time<<endl;
+        cout<<"T.T: "<<p.turnaround_time<<endl;
+        av_waiting+=p.waiting_time;
+    }
+    double average=(double) av_waiting/n;
+    cout<<"Average waiting time: "<<average<<endl;
     return 0;
 }
