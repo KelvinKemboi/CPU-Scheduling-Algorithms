@@ -8,7 +8,7 @@ struct Process{
     int arrival_time;
     int burst_time;
     int priority;
-    int response_time;
+    int response_time=-1;
     int turnaround_time=0;
     int waiting_time=0;
 };
@@ -36,12 +36,25 @@ int main() {
         if(selected==-1){
             int next=INT_MAX;
             for(int i=0;i<n;i++){
-                int v=processes[i];
+                int v=processes[i].arrival_time;
                 next=min(next, v);
             }
             time=next;
             continue;
         }
+        //select process
+        Process& p=processes[selected];
+
+        //update response time
+        if(p.response_time==-1){
+            p.response_time=time-p.arrival_time;
+        }
+        //update variables
+        time+=p.burst_time;
+        p.turnaround_time=time-p.arrival_time;
+        p.waiting_time=p.turnaround_time-p.burst_time;
+        done[selected]=true;
+        completed++;
     }
     
     return 0;
