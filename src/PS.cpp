@@ -56,6 +56,20 @@ int main() {
         done[selected]=true;
         completed++;
     }
-    
+    //print results
+    int av_wait=0;
+    int av_resp=0;
+    for(auto& p: processes){
+        cout<<"ID"<<p.id<<endl;
+        cout<<"W.T"<<p.waiting_time<<endl;
+        cout<<"T.T"<<p.turnaround_time<<endl;
+        av_wait+=p.waiting_time;
+        av_resp+=p.response_time;
+    }
+    double wait=(double) av_wait/n;
+    double response=(double) av_resp/n;
+
+    cout<<"Average waiting time: "<<wait<<endl;
+    cout<<"Average response times: "<<response<<endl;
     return 0;
 }
