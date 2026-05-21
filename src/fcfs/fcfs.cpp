@@ -1,5 +1,6 @@
 #include <iostream>
 #include <algorithm>
+#include "fcfs.h"
 #include <vector>
 using namespace std;
 
