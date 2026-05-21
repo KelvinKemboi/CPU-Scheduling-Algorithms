@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <climits>
+#include "priority.h"
 using namespace std;
 
 void priority(vector<Process>& processes) {
