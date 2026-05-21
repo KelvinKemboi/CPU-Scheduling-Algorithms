@@ -2,24 +2,10 @@
 #include <vector>
 #include <queue>
 #include <climits>
+#include "rr.h"
 using namespace std;
 
-struct Process{
-    int id;
-    int arrival_time;
-    int burst_time;
-    int remaining;
-    int turnaround_time=0;
-    int waiting_time=0;
-    int response_time=-1;
-};
-
-int main(){
-    //processes
-    Process p1={1, 0, 6, 6};
-    Process p2={2, 2, 8, 8};
-    Process p3={3, 4, 3, 3};
-    vector<Process> processes={p1, p2, p3};
+void rr(vector<Process>& processes){
     //variables
     int n=processes.size();
     int time=0;
@@ -84,20 +70,4 @@ int main(){
             q.push(front); //push back to queue if not done
         }
     }
-    int av_wait=0;
-    int av_resp=0;
-    //printing
-    for(auto& p: processes){
-        cout<<"ID: "<<p.id<<endl;
-        cout<<"W.T: "<<p.waiting_time<<endl;
-        cout<<"T.T: "<<p.turnaround_time<<endl;
-        av_wait+=p.waiting_time;
-        av_resp+=p.response_time;
-    }
-    double wait=(double)av_wait/n;
-    double response=(double)av_resp/n;
-
-    cout<<"Average wait times: "<<wait<<endl;
-    cout<<"Average response times: "<<response<<endl;
-    return 0;
 }
