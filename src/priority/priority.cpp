@@ -3,22 +3,7 @@
 #include <climits>
 using namespace std;
 
-struct Process{
-    int id;
-    int arrival_time;
-    int burst_time;
-    int priority;
-    int response_time=-1;
-    int turnaround_time=0;
-    int waiting_time=0;
-};
-
-int main() {
-    Process p1={1, 0, 6, 2, 6};
-    Process p2={2, 2, 8, 1, 8};
-    Process p3={3, 4, 3, 3, 3};
-    //processes
-    vector<Process>processes={p1, p2, p3};
+void priority(vector<Process>& processes) {
     //variables
     int n=processes.size();
     int completed=0;
@@ -56,20 +41,4 @@ int main() {
         done[selected]=true;
         completed++;
     }
-    //print results
-    int av_wait=0;
-    int av_resp=0;
-    for(auto& p: processes){
-        cout<<"ID"<<p.id<<endl;
-        cout<<"W.T"<<p.waiting_time<<endl;
-        cout<<"T.T"<<p.turnaround_time<<endl;
-        av_wait+=p.waiting_time;
-        av_resp+=p.response_time;
-    }
-    double wait=(double) av_wait/n;
-    double response=(double) av_resp/n;
-
-    cout<<"Average waiting time: "<<wait<<endl;
-    cout<<"Average response times: "<<response<<endl;
-    return 0;
 }
