@@ -2,22 +2,10 @@
 #include <algorithm>
 #include <vector>
 #include <climits>
+#include "sjf.h"
 using namespace std;
 
-struct Process{
-    int id;
-    int arrival_time;
-    int burst_time;
-    int turnaround_time=0;
-    int waiting_time=0;
-};
-
-int main(){
-    Process p1={1, 0, 6};
-    Process p2={2, 2, 8};
-    Process p3={3, 4, 3};
-    vector<Process> processes={p1, p2, p3};
-
+void sjf(vector<Process>& processes){
     int n=processes.size();
     int time=0;
     int completed=0;
@@ -52,16 +40,4 @@ int main(){
         done[shortest]=true;
         completed++;
     }
-
-    //printing results and average wait times
-    int av_waiting=0;
-    for(auto& p: processes){
-        cout<<"P: "<<p.id<<endl;
-        cout<<"W.T: "<<p.waiting_time<<endl;
-        cout<<"T.T: "<<p.turnaround_time<<endl;
-        av_waiting+=p.waiting_time;
-    }
-    double average=(double) av_waiting/n;
-    cout<<"Average waiting time: "<<average<<endl;
-    return 0;
 }
