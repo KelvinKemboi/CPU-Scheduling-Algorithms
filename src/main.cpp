@@ -16,6 +16,8 @@ int main(){
         int id=i+1;
         cout<<"P"<<id<<" arrival, burst, priority: ";
         cin>>processes[i].arrival_time>>processes[i].burst_time>>processes[i].priority; //input for metric values
+        processes[i].id=id;
+        processes[i].remaining=processes[i].burst_time;
 
     }
     return 0;
