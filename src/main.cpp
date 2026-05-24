@@ -7,6 +7,18 @@
 #include <vector>
 using namespace std;
 
+//print results
+void print_results(const vector<Process>& processes, const string& algo){
+    cout<<"\n---"<<algo<<"---\n"<<endl;
+    //lopp through and orint results
+    for(const Process& p: processes){
+        cout<<"Process ID"<<p.id
+            <<" | wait time: "<<p.waiting_time
+            <<" | turnaround time: "<<p.turnaround_time
+            <<"\n";
+    }
+}
+
 int main(){
     int n;
     cout<<"Enter number of processes: ";
@@ -22,11 +34,13 @@ int main(){
     int choice;
     int quantum=2; //default time slice
     //show list
-    cout<<"\n1. First Come First Served"
-    <<"\n2. Shortest Job First"
-    <<"\n3. Round Robin"
-    <<"\n4. Priority Scheduling"
-    <<"\n5. All"; 
+    cout<<"\nPick a choice..."
+        <<"\n1. First Come First Served"
+        <<"\n2. Shortest Job First"
+        <<"\n3. Round Robin"
+        <<"\n4. Priority Scheduling"
+        <<"\n5. All"<<endl;
+    cout<<"Enter your choice: ";
     cin>>choice; //pick an algorithm
     if(choice==3||choice==5){
         cout<<"Quantum: ";
@@ -36,10 +50,10 @@ int main(){
     auto run=[&](int algo){
         vector<Process> p=processes;
         switch(algo){
-            case 1: fcfs(p); break;
-            case 2: sjf(p); break;
-            case 3: rr(p, quantum); break;
-            case 4: priority(p);
+            case 1: fcfs(p); print_results(p, "FCFS"); break;
+            case 2: sjf(p); print_results(p, "SJF"); break;
+            case 3: rr(p, quantum); print_results(p, "Round Robin"); break;
+            case 4: priority(p); print_results(p, "Priority"); break;
         }
     };
     if(choice==5){
