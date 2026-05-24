@@ -1,3 +1,4 @@
+#pragma once  //defines the struct once
 #include <vector>
 //shared struct
 struct Process {
