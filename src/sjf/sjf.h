@@ -1,4 +1,4 @@
 #include "Process.h"
 #include <vector>
 
-void sjf(vector<Process>& processes);
+void sjf(std::vector<Process>& processes);

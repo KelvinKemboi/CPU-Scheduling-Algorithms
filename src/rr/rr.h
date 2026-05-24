@@ -1,4 +1,4 @@
 #include <vector>
 #include "Process.h"
 
-void rr(vector<Process>& processes);
+void rr(std::vector<Process>& processes, int quantum);

@@ -39,10 +39,17 @@ int main(){
             case 1: fcfs(p); break;
             case 2: sjf(p); break;
             case 3: rr(p, quantum); break;
-            case 4: priority(p)
+            case 4: priority(p);
         }
     };
-    run(1);
+    if(choice==5){
+        run(1);
+        run(2);
+        run(3);
+        run(4);
+    }else{
+        run(choice);
+    }
     return 0;
 }
 

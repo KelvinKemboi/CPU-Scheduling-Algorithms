@@ -5,11 +5,10 @@
 #include "rr.h"
 using namespace std;
 
-void rr(vector<Process>& processes){
+void rr(vector<Process>& processes, int quantum){
     //variables
     int n=processes.size();
     int time=0;
-    int quantum=2;
     int completed=0;
     queue<int> q;
     vector<bool> inQueue(n, false);
