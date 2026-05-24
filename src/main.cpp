@@ -11,6 +11,7 @@ using namespace std;
 void print_results(const vector<Process>& processes, const string& algo){
     cout<<"\n---"<<algo<<"---\n"<<endl;
     //lopp through and orint results
+    int av
     for(const Process& p: processes){
         cout<<"Process ID"<<p.id
             <<" | wait time: "<<p.waiting_time
