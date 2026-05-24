@@ -1,139 +1,140 @@
 # CPU Scheduling Simulator
 
-A collection of CPU scheduling algorithms. Each algorithm simulates how an operating system scheduler decides which process runs next, and computes waiting time, turnaround time, and response time.
+A small C++ simulator for some CPU scheduling algorithms. The
+program accepts process details from input, lets you choose one
+scheduling strategy, and computes scheduling metrics for each process.
 
----
+## Supported Algorithms
 
-## Project structure
+| Option | Algorithm | Type | Selection rule |
+|---|---|---|---|
+| 1 | First Come First Served (FCFS) | Non-preemptive | Earliest arrival time runs first |
+| 2 | Shortest Job First (SJF) | Non-preemptive | Shortest burst time among arrived processes |
+| 3 | Round Robin (RR) | Preemptive | Fixed time quantum, processes rotate through a queue |
+| 4 | Priority Scheduling | Non-preemptive | Highest priority value among arrived processes |
+| 5 | All algorithms | Mixed | Runs FCFS, SJF, RR, and Priority on the same input |
 
+## Project Structure
+
+```text
+CPU-Scheduling/
+├── README.md
+└── src/
+    ├── main.cpp
+    ├── Process.h
+    ├── fcfs/
+    │   ├── fcfs.cpp
+    │   └── fcfs.h
+    ├── priority/
+    │   ├── priority.cpp
+    │   └── priority.h
+    ├── rr/
+    │   ├── rr.cpp
+    │   └── rr.h
+    └── sjf/
+        ├── sjf.cpp
+        └── sjf.h
 ```
-.
-├── FCFS.cpp       — First Come First Served
-├── SJF.cpp        — Shortest Job First (non-preemptive)
-├── RR.cpp         — Round Robin (quantum=2)
-└── PS.cpp         — Priority Scheduling (non-preemptive, higher value = higher priority)
-```
-
----
 
 ## Requirements
 
-- Linux or macOS
-- g++ with C++20 support
-
----
+- Linux, macOS, or Windows with a C++ compiler
+- `g++` or another compiler with C++17 support
 
 ## Build
 
-```bash
-g++ -std=c++20 FCFS.cpp -o fcfs
-g++ -std=c++17 SJF.cpp -o sjf
-g++ -std=c++17 RR.cpp -o rr
-g++ -std=c++17 PS.cpp -o priority
-```
+From the project root:
 
----
+```bash
+g++ -std=c++17 -Isrc \
+  src/main.cpp \
+  src/fcfs/fcfs.cpp \
+  src/sjf/sjf.cpp \
+  src/rr/rr.cpp \
+  src/priority/priority.cpp \
+  -o cpu-scheduling
+```
 
 ## Run
 
 ```bash
-./fcfs
-./sjf
-./rr
-./priority
+./cpu-scheduling
 ```
 
-Each program runs on the same three processes and prints per-process metrics plus averages.
+The program prompts for:
 
----
+1. The number of processes
+2. Each process's arrival time, burst time, and priority
+3. The scheduling algorithm to run
+4. A time quantum when Round Robin is selected
 
-## Test processes
+Example input:
 
-All four algorithms run on the same input for direct comparison:
+```text
+Enter number of processes: 3
+P1 arrival, burst, priority: 0 6 2
+P2 arrival, burst, priority: 2 8 1
+P3 arrival, burst, priority: 4 3 3
 
-| Process | Arrival | Burst | Priority |
-|---|---|---|---|
-| P1 | 0 | 6 | 2 |
-| P2 | 2 | 8 | 1 |
-| P3 | 4 | 3 | 3 |
-
-Priority is only used by `PS.cpp`. RR uses a time slice/quantum of 2.
-
----
-
-## Algorithms
-
-### FCFS — First Come First Served (`FCFS.cpp`)
-
-Processes run in arrival order. Sorted by `arrival_time` (ties broken by `id`). Once a process starts it runs to completion. Implements a queue
-
-```
-Sort by arrival -> run in order -> no preemption
+1. First Come First Served
+2. Shortest Job First
+3. Round Robin
+4. Priority Scheduling
+5. All
+5
+Quantum: 2
 ```
 
-**Metrics computed:** `waiting_time`, `turnaround_time`, average waiting time.
+## Process Model
 
----
+Each process is represented by the shared `Process` struct in `src/Process.h`.
 
-### SJF — Shortest Job First (`SJF.cpp`)
+| Field | Meaning |
+|---|---|
+| `id` | Process number assigned by the program |
+| `arrival_time` | Time when the process enters the ready queue |
+| `burst_time` | Total CPU time required |
+| `remaining` | CPU time still needed, used by Round Robin |
+| `priority` | Priority value, where a larger value means higher priority |
+| `waiting_time` | Total time spent waiting in the ready queue |
+| `turnaround_time` | Total time from arrival to completion |
+| `response_time` | Time from arrival until the process first gets CPU time |
 
-At each point in time, the scheduler picks the arrived process with the smallest `burst_time`. Non-preemptive - a running process is never interrupted. Uses a `done[]` boolean array to track completed processes and jumps `time` forward to the next arrival when the CPU is idle.
-
-```
-At each step: scan arrived processes -> pick smallest burst -> run to completion
-```
-
-**Metrics computed:** `waiting_time`, `turnaround_time`, average waiting time.
-
----
-
-### Round Robin (`RR.cpp`)
-
-Each process gets a fixed time slice (`quantum = 2`). If it does not finish within the quantum it goes to the back of the ready queue. A `remaining` field tracks how much CPU time each process still needs. New arrivals are pushed into the queue as time advances. `response_time` is recorded the first time a process reaches the front of the queue.
-
-```
-Queue → pop front → run min(quantum, remaining) → push back if not done
-```
-
-**Metrics computed:** `waiting_time`, `turnaround_time`, `response_time`, averages for both.
-
----
-
-### Priority Scheduling (`PS.cpp`)
-
-At each point in time, the scheduler picks the arrived process with the highest `priority` value (larger number = higher priority). Non-preemptive. Ties default to whichever appears first in the vector. `response_time` is recorded the first time a process is selected.
-
-```
-At each step: scan arrived processes -> pick highest priority -> run to completion
-```
-
-**Metrics computed:** `waiting_time`, `turnaround_time`, `response_time`, averages for both.
-
----
-
-## Metrics explained
+## Metrics
 
 | Metric | Formula | Meaning |
 |---|---|---|
-| `waiting_time` | `turnaround_time - burst_time` | Time spent sitting in the ready queue |
-| `turnaround_time` | `finish_time - arrival_time` | Total time from arrival to completion |
-| `response_time` | `first_run_time - arrival_time` | Time until the process first gets the CPU |
+| Waiting time | `turnaround_time - burst_time` | Time spent waiting before and between CPU runs |
+| Turnaround time | `finish_time - arrival_time` | Total time from arrival to completion |
+| Response time | `first_run_time - arrival_time` | Time until the process first starts running |
 
----
+## Algorithm Notes
 
-## Algorithm comparison
+### First Come First Served
 
-| Algorithm | Preemptive | Optimal for | Weakness |
-|---|---|---|---|
-| FCFS | No | Simplicity | Long jobs block short ones (convoy effect) |
-| SJF | No | Minimizing average wait | Requires knowing burst time in advance |
-| Round Robin | Yes | Fairness, response time | Higher turnaround than SJF |
-| Priority | No | Urgent job ordering | Low-priority jobs may starve |
+FCFS sorts processes by arrival time, using process id as a tie breaker. Each
+process runs until it finishes
 
----
+### Shortest Job First
 
-## Known limitations
+SJF repeatedly scans the arrived, unfinished processes and selects the one with
+the smallest burst time. If no process has arrived yet, the scheduler jumps to
+the next arrival time
 
-- Processes are hardcoded
-- SJF and Priority require burst times known upfront
-- Round Robin quantum is fixed at 2
+### Round Robin
+
+Round Robin uses a ready queue and a user-provided quantum. Each process runs
+for at most one quantum before either finishing or returning to the back of the
+queue
+
+### Priority Scheduling
+
+Priority scheduling repeatedly selects the arrived, unfinished process with the
+highest priority value. The implementation is non-preemptive, so a selected
+process runs to completion
+
+## Current Limitations
+
+- Process data is entered at runtime.
+- SJF and Priority Scheduling require burst time and priority info
+
