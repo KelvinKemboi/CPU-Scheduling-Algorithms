@@ -18,8 +18,31 @@ int main(){
         cin>>processes[i].arrival_time>>processes[i].burst_time>>processes[i].priority; //input for metric values
         processes[i].id=id;
         processes[i].remaining=processes[i].burst_time;
-
     }
+    int choice;
+    int quantum=2; //default time slice
+    //show list
+    cout<<"\n1. First Come First Served"
+    <<"\n2. Shortest Job First"
+    <<"\n3. Round Robin"
+    <<"\n4. Priority Scheduling"
+    <<"\n5. All"; 
+    cin>>choice; //pick an algorithm
+    if(choice==3||choice==5){
+        cout<<"Quantum: ";
+        cin>>quantum; //can choose another time slice
+    }
+
+    auto run=[&](int algo){
+        vector<Process> p=processes;
+        switch(algo){
+            case 1: fcfs(p); break;
+            case 2: sjf(p); break;
+            case 3: rr(p, quantum); break;
+            case 4: priority(p)
+        }
+    };
+    run(1);
     return 0;
 }
 
